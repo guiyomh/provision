@@ -1,0 +1,158 @@
+- name: Install developer tool packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - jq
+    - sloccount
+    - tig
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer tool packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - jq
+    - sloccount
+    - tig
+  when: ansible_os_family == 'RedHat'
+
+- name: Install developer status packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - htop
+    - atop
+    - iftop
+    - mytop
+    - iotop
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer status packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - htop
+    - atop
+    - iftop
+    - mytop
+    - iotop
+  when: ansible_os_family == 'RedHat'
+
+- name: Install developer system packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - fuse
+    - sshfs
+    - xvfb
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer system packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - fuse
+    - fuse-sshfs
+    - xorg-x11-server-Xvfb
+  when: ansible_os_family == 'RedHat'
+
+- name: Install developer compiling packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - build-essential
+    - strace
+    - closure-compiler
+    - g++
+    - make
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer compiling packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - "@Development tools"
+    - strace
+    - gcc-c++
+    - make
+  when: ansible_os_family == 'RedHat'
+
+- name: Install developer language packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - ruby
+    - ruby-dev
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer language packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - ruby
+    - ruby-devel
+  when: ansible_os_family == 'RedHat'
+
+- name: Install developer conversion tool packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - poppler-utils
+    - graphicsmagick
+    - imagemagick
+    - wkhtmltopdf
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer conversion tool packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - poppler-utils
+    - GraphicsMagick
+    - ImageMagick
+    - wkhtmltopdf
+  when: ansible_os_family == 'RedHat'
+
+- name: Install developer other packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - tnef
+    - dos2unix
+    - octave
+    - lynx
+    - links
+    - mutt
+    - p7zip
+    - colordiff
+    - graphviz
+  when: ansible_os_family == 'Debian'
+
+- name: Install developer other packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - tnef
+    - dos2unix
+    - octave
+    - lynx
+    - links
+    - mutt
+    - p7zip
+    - colordiff
+    - graphviz
+  when: ansible_os_family == 'RedHat'

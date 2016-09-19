@@ -1,0 +1,4 @@
+.vagrant/
+disks/
+id_*
+*.retry

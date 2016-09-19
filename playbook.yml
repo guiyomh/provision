@@ -1,0 +1,19 @@
+---
+
+- hosts: all
+ # remote_user: vagrant
+  become: yes
+  become_method: sudo
+  vars_files:
+    - ./default.yml
+  roles:
+   - { role: common    }
+   - { role: git,        when: PROVISION.git == 1 }
+   - { role: docker,     when: PROVISION.docker == 1 }
+   - { role: disk      }
+   - { role: ntp       }
+#   - { role: firewall       }
+   - { role: php ,       when: PROVISION.clitools == 1 }
+   - { role: clitools ,  when: PROVISION.clitools == 1 }
+   - { role: monit          }
+   - { role: user           }

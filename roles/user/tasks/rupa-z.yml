@@ -1,0 +1,42 @@
+- name: Install rupa/z
+  command: 'wget {{ item.remote }} -O {{ item.path }}'
+  with_items:
+   - { remote: 'https://raw.githubusercontent.com/rupa/z/master/z.sh', path: '/usr/local/bin/z.sh' }
+  args:
+    creates: '/usr/local/bin/z.sh'
+
+- name: Fix rights
+  file:
+    path: '/usr/local/bin/z.sh'
+    state: 'file'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0777'
+
+- name: Register rupa/z
+  lineinfile:
+    dest: '{{ item.file }}'
+    regexp: 'source /usr/local/bin/z.sh'
+    line:   'source /usr/local/bin/z.sh'
+    state: present
+  with_items:
+   - { file: '/home/{{ ansible_user }}/.zshrc' }
+   - { file: '/home/{{ ansible_user }}/.bashrc' }
+   - { file: '/root/.zshrc' }
+   - { file: '/root/.bashrc' }
+
+- name: Create rupa/z initial file
+  file:
+    path: '/home/{{ ansible_user }}/.z'
+    state: 'touch'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '0644'
+
+- name: Create rupa/z initial file
+  file:
+    path: '/root/.z'
+    state: 'touch'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'

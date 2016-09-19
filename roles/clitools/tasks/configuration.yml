@@ -1,0 +1,55 @@
+- name: Setup automatic startup maintenance (clitools)
+  lineinfile:
+    destfile: /etc/rc.local
+    insertbefore: '^exit 0'
+    line:  '/usr/local/bin/ct system:startup > /dev/null'
+    state: present
+
+- name: Deploy local configuration
+  template:
+    src:   clitools.ini.j2
+    dest:  /etc/clitools.ini
+    owner: "{{ ansible_user }}"
+    group: root
+    mode:  0644
+
+- name: Copy cron configuration
+  copy:
+    src:   crontab
+    dest:  /etc/cron.d/clitools
+    owner: root
+    group: root
+    mode:  0644
+
+- name: Create /tmp/debug/ directory
+  file:
+    dest:  '{{ item }}'
+    owner: root
+    group: root
+    mode:  0777
+    state: directory
+  with_items:
+    - /etc/bash_completion.d/
+    - /etc/zsh_completion.d/
+
+- name: Copy bash.completition
+  copy:
+    src:   bash.clitools.completition
+    dest:  /etc/bash_completion.d/clitools
+    owner: root
+    group: root
+    mode:  0644
+
+- name: Copy zsh.completition
+  copy:
+    src:   zsh.clitools.completition
+    dest:  /etc/zsh_completion.d/clitools
+    owner: root
+    group: root
+    mode:  0644
+
+- name: Run clitools system startup
+  raw: '/usr/local/bin/ct system:startup > /dev/null'
+  ignore_errors: True
+  notify:
+    - Run clitools system startup

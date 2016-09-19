@@ -1,0 +1,22 @@
+- name: Set shell
+  command: 'chsh -s "{{ PROFILE.shell }}" {{ ansible_user }}'
+  when: PROFILE.shell is defined
+
+- name: Set shell root
+  command: 'chsh -s "{{ PROFILE.shell }}" root'
+  when: PROFILE.shell is defined
+
+- name: Set bash/zsh file perms
+  file:
+    path: '{{ item.path }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode:  0644
+  with_items:
+   - { path: '/home/{{ ansible_user }}/.zshrc' }
+   - { path: '/home/{{ ansible_user }}/.zshrc.local' }
+   - { path: '/home/{{ ansible_user }}/.bashrc' }
+   - { path: '/root/.zshrc' }
+   - { path: '/root/.zshrc.local' }
+   - { path: '/root/.bashrc' }
+  ignore_errors: True

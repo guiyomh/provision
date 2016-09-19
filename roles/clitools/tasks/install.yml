@@ -1,0 +1,55 @@
+# FIXME: wait for upstream SNI support
+#- name: Fetch clitools (latest)
+#  get_url:
+#    url:   'https://dl.webdevops.io/clicommand/clitools.phar'
+#    dest:  /usr/local/bin/ct
+#    owner: 'root'
+#    group: 'root'
+#    mode:  0755
+
+- name: Fetch clitools (latest)
+  command: 'wget -O/usr/local/bin/ct https://dl.webdevops.io/clicommand/clitools.phar'
+
+- name: Set /usr/local/bin/ct rights
+  file:
+    dest:  /usr/local/bin/ct
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0777
+    state: file
+
+- name: Install clitools additional packages [Debian]
+  action: apt pkg='{{ item }}' state=latest
+  with_items:
+    # Tools
+    - wget
+    - multitail
+    - sudo
+    - moreutils
+    # Network
+    - tshark
+    - tcpflow
+    - tcpdump
+    - ngrep
+    # Debug
+    - strace
+    - lsof
+  when: ansible_os_family == 'Debian'
+
+- name: Install clitools additional packages [RedHat]
+  action: yum pkg='{{ item }}' state=latest
+  with_items:
+    # Tools
+    - wget
+    - multitail
+    - sudo
+    - moreutils
+    # Network
+    - wireshark
+    - derrick
+    - tcpdump
+    - ngrep
+    # Debug
+    - strace
+    - lsof
+  when: ansible_os_family == 'RedHat'

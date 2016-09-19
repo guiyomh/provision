@@ -1,0 +1,3 @@
+01 * * * *  root [ -x /usr/local/bin/ct ] && /usr/local/bin/ct system:crontask &> /dev/null
+#eof
+

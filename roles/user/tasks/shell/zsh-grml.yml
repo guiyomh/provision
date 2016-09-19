@@ -1,0 +1,29 @@
+- name: Fetch zshrc
+  command: 'wget {{ item.remote }} -O {{ item.path }}'
+  with_items:
+   - { remote: 'http://git.grml.org/f/grml-etc-core/etc/zsh/zshrc', path: '{{ home_dir }}/.zshrc' }
+  args:
+    creates: '{{ home_dir }}/.zshrc'
+
+- name: Fetch zshrc.local
+  command: 'wget {{ item.remote }} -O {{ item.path }}'
+  with_items:
+   - { remote: 'http://git.grml.org/f/grml-etc-core/etc/skel/.zshrc', path: '{{ home_dir }}/.zshrc.local' }
+  args:
+    creates: '{{ home_dir }}/.zshrc.local'
+  tags:
+    - umask
+
+- name: Set umask
+  lineinfile:
+    dest: '{{ home_dir }}/.zshrc.local'
+    regexp: "{{ item.regex }}"
+    insertafter: "{{ item.insertAfter }}"
+    line:   "{{ item.line }}"
+    state: present
+  with_items:
+   - { regex: '^#?if \(\( EUID', insertAfter: '^## Settings for umask', line: 'if (( EUID == 0 )); then'}
+   - { regex: '^#?    umask 002', insertAfter: '^if \(\( EUID == 0 \)\); then', line: '    umask 002'}
+   - { regex: '^(?<=\s002\s)#else', insertAfter: '^    umask 002', line: 'else'}
+   - { regex: '^#?    umask 022', insertAfter: '^(?<=\s002\s)#?else', line: '    umask 022'}
+   - { regex: '^(?<=\s022\s)#fi', insertAfter: '^    umask 022', line: 'fi'}

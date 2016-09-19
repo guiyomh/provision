@@ -1,0 +1,21 @@
+
+- name: Enable yum Repo
+  command: "/usr/bin/yum-config-manager --enable {{item}}"
+  with_items:
+    - rhel-7-server-optional-rpms
+    - rhel-7-server-extras-rpms
+  when: ansible_distribution == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Install rpmForge
+  yum:
+    name: http://repository.it4i.cz/mirrors/repoforge/redhat/el7/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Update system [Debian]
+  apt: update_cache=yes
+  when: ansible_os_family == 'Debian' and PROVISION.update == 1
+
+- name: Update system [RedHat]
+  yum: name=* state=latest
+  when: ansible_os_family == 'RedHat' and PROVISION.update == 1

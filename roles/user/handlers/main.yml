@@ -1,0 +1,3 @@
+---
+- name: Restart incron
+  service: name=incrond state=restarted

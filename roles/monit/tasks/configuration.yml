@@ -1,0 +1,55 @@
+---
+
+- name: Set path monitrc [Debian]
+  set_fact:
+    monitrc_path: /etc/monit/monitrc
+    monitd_path: /etc/monit/conf.d/
+  when: ansible_os_family == 'Debian'
+
+- name: Set path monitrc [RedHat]
+  set_fact:
+    monitrc_path: /etc/monitrc
+    monitd_path: /etc/monit.d/
+  when: ansible_os_family == 'RedHat'
+
+- name: Setup monitrc
+  lineinfile:
+    dest:   "{{ monitrc_path }}"
+    regexp: '^[\s]*{{ item.regexp }}'
+    line:   '{{ item.line }}'
+  with_items:
+    - { regexp: 'set daemon 120',   line: 'set daemon 60 with start delay 240' }
+    - { regexp: 'set mailserver',   line: 'set mailserver {{ MAIL.relayhost }}' }
+    - { regexp: 'set alert',        line: 'set alert {{ LOGWATCH.email }}  but not on { instance, pid }' }
+    - { regexp: 'set httpd',        line: 'set httpd port 2812 and allow admin:monit' }
+  notify:
+    - Restart monit
+
+
+- name: Deploy monit conf.d
+  synchronize:
+    rsync_path: "sudo rsync"
+    src:        roles/monit/files/monit.d/
+    dest:       "{{ monitd_path}}"
+    delete:     yes
+  notify:
+    - Restart monit
+
+- name: Configure logwatch (/etc/logwatch/conf/logwatch.conf)
+  template:
+    src: etc_logwatch_conf_logwatch.conf.j2
+    dest: /etc/logwatch/conf/logwatch.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Remove logwatch's cronjob
+  file:
+    path: /etc/cron.daily/0logwatch
+    state: absent
+
+- name: Configure logwatch's cronjob
+  cron:
+    name: logwatch
+    job: /usr/sbin/logwatch
+    special_time: "{{LOGWATCH.cron_time}}"

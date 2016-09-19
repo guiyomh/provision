@@ -1,0 +1,37 @@
+- name: Remove old ntp packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: absent
+    purge: yes
+  with_items:
+    - ntp
+    - openntpd
+  when: ansible_os_family == 'Debian'
+
+- name: Remove old ntp packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: absent
+  with_items:
+    - ntp
+  when: ansible_os_family == 'RedHat'
+
+## WORKAROUND: restart apparmor because of openntpd (if apparmor is available)
+# - command: "service apparmor restart"
+#   ignore_errors: yes
+
+- name: Install chrony [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - chrony
+  when: ansible_os_family == 'Debian'
+
+- name: Install chrony [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - chrony
+  when: ansible_os_family == 'RedHat'

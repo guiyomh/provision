@@ -1,0 +1,9 @@
+- name: Install cli tools
+  include: install.yml
+  tags:
+    - bootstrap
+
+- name: Configure cli tools
+  include: configuration.yml
+  tags:
+    - bootstrap

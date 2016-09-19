@@ -1,0 +1,71 @@
+- name: Uninstall docker (from Ubuntu PPA) [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: absent
+  with_items:
+    - lxc-docker
+    - lxc-docker-*
+  when: ansible_os_family == 'Debian'
+
+- name: Add docker repository [Debian]
+  apt_repository:
+    repo: 'ppa:docker-maint/testing'
+    state: absent
+  when: ansible_os_family == 'Debian'
+
+- name: Install docker utils ['Debian']
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - curl
+    - aufs-tools
+  when: ansible_os_family == 'Debian'
+
+- name: Add docker repository key [Debian]
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id:        58118E89F3A912897C070ADBF76221572C52609D
+  when: ansible_os_family == 'Debian'
+
+- name: Add docker repository [Debian]
+  apt_repository:
+    repo:  'deb https://apt.dockerproject.org/repo ubuntu-trusty main'
+    state: present
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: Install docker [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: latest
+  with_items:
+    - docker-engine
+  when: ansible_os_family == 'Debian'
+
+- name: Add Docker Yum repo [RedHat]
+  copy:
+    content: |
+      [dockerrepo]
+      name=Docker Repository
+      baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://yum.dockerproject.org/gpg
+    dest: /etc/yum.repos.d/docker.repo
+  when: ansible_os_family == "RedHat"
+
+- name: Install Docker  [RedHat]
+  yum: name=docker-engine state=latest
+  when: ansible_os_family == "RedHat"
+
+- name: Ensure Docker is running (and enabled it at boot)  [RedHat]
+  service: name=docker state=started enabled=yes
+
+- name: Create docker group and add ansible user to it  [RedHat]
+  user: 
+    name: "{{ ansible_user_id }}"
+    groups: docker
+  become: yes
+  register: add_group
+  when: ansible_os_family == "RedHat"

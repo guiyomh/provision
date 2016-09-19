@@ -1,0 +1,5 @@
+- name: Fetch ssh key from github api
+  authorized_key:
+    user: "{{ ansible_user }}"
+    key: 'https://github.com/{{ PROFILE.githubUser }}.keys'
+  ignore_errors: True

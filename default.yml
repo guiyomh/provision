@@ -1,0 +1,110 @@
+---
+###################
+# User/Profile info
+###################
+PROFILE:
+  ## default shell
+  shell:    '/bin/zsh'
+
+  ## zsh shell layout [grml,prezto,ohmyzsh]
+  zshShell: 'grml'
+
+MAIL:
+  relayhost: "{{ SMTP_RELAY | default('localhost')}}"
+
+###################
+# Provisioning features
+###################
+PROVISION:
+  update:      1     # do full system update for each full provisoning
+  packages:    'minimal' # full or minimal
+  samba:       0      # Samba server
+  ntp:         1      # Time synchronization
+  mail:        0      # Mail sandbox
+  php:         1      # Local PHP
+  git:         1      # Git
+  docker:      1      # Docker server
+  clitools:    1      # CliTools
+
+###################
+# Server settings
+###################
+SERVER:
+  timezone: 'Europe/Paris'
+  data:
+    # Filesystem of image
+    # -> ext4, btrfs or xfs
+    filesystem: 'btrfs'
+    device: "{{ DISK.device | default('sdb')}}"
+    partition: "{{ DISK.partition | default('sdb1')}}"
+
+
+###################
+# GIT
+###################
+GIT:
+  workspace: /root
+  # If set to TRUE, git will be installed from source, using the version set with
+  # the 'git_version' variable instead of using a package.
+  install_from_source: true
+  install_path: "/usr"
+  version: "2.9.0"
+  # If git_install_from_source is set to false, these two variables define whether
+  # to use an additional repo for the package installation, and which git packages
+  # will be installed.
+  enablerepo: ""
+  packages:
+    - git
+    - git-svn
+  # If git is already installed at and older version, force a new source build.
+  # Only applies if install_from_source is `true`.
+  install_from_source_force_update: true
+
+# Leave this at it's default.(false)
+git_reinstall_from_source: false
+
+###################
+# Clitools settings
+###################
+CLITOOLS:
+  docker:
+    boilerplate: 'https://github.com/mblaschke/php-docker-boilerplate.git'
+
+###################
+# LOGWATCH setting
+###################
+LOGWATCH:
+  email: "{{ MAIL_ADMIN  | default('technical@infogene.fr') }}" # Email Address which Logwatch reports to
+  detail: High                  # The level of detail in the Logwatch report (Low,Medium, High)
+  range: yesterday              # The default time range for the Logwatch report (all,today, yesterday)
+  output: mail                  # The output method of the Logwatch report (mail, stdout)
+  format: "html"                # The format of the Logwatch report (text, html)
+  cron_time: "daily"            # Cron special time specification nickname - must match with logwatch range!
+
+###################
+# Docker features
+###################
+DOCKER:
+  ## Additional docker opts
+  ##  -> if you use btrfs you can set: -s btrfs
+  opts: ''
+
+  # Cleanup tasks on provisioning
+  cleanup:
+    # Clean orphaned images
+    images: 1
+
+    # Cleanu ophaned volumes
+    volumes: 1
+
+    # Cleanup /var/lib/docker/tmp/
+    tmp: 1
+
+  ## Automatic docker image loading/updating
+  images:
+    # Official images
+    - centos:7
+    - mysql:5.7.15
+    # WebDevOps
+    #- webdevops/base:centos-7
+    #- webdevops/base:debian-7

@@ -1,0 +1,74 @@
+
+#############################
+# Code (migration)
+#############################
+
+- name: Unmount code
+  mount:
+    name:   "/home/{{ ansible_user }}/code/"
+    src:    /mnt/data/code
+    fstype: none
+    opts:   'bind'
+    state:  unmounted
+
+- name: Remove mount for code
+  mount:
+    name:   "/home/{{ ansible_user }}/code/"
+    src:    /mnt/data/code
+    fstype: none
+    opts:   'bind'
+    state:  absent
+
+- name: stat /mnt/data/code
+  stat:
+    path: /mnt/data/code
+  register: old_code_stat
+
+- name: Move /mnt/data/code to /mnt/data/projects
+  command: mv /mnt/data/code /mnt/data/projects
+  when: old_code_stat.stat.exists
+
+#############################
+# Projects
+#############################
+
+- stat:
+    path: /mnt/data/projects/
+  register: codedir
+
+- name: Create code storage
+  shell: 'mkdir /mnt/data/projects'
+  args:
+    creates: '/mnt/data/projects/'
+
+- name: Setup rights for /mnt/data
+  file:
+    path:  /mnt/data
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0777
+
+- name: Setup rights for /mnt/data/projects
+  file:
+    path:  /mnt/data/projects
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode:  0777
+
+- name: Setup mounting for docker
+  mount:
+    name:   "/home/{{ ansible_user }}/projects/"
+    src:    /mnt/data/projects
+    fstype: none
+    opts:   'bind'
+    state:  present
+
+- name: Mount code
+  mount:
+    name:   "/home/{{ ansible_user }}/projects/"
+    src:    /mnt/data/projects
+    fstype: none
+    opts:   'bind'
+    state:  mounted

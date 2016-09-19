@@ -1,0 +1,16 @@
+- name: Install server packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - zram-config
+    - haveged
+  when: ansible_os_family == 'Debian'
+
+- name: Install server packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - haveged
+  when: ansible_os_family == 'RedHat'

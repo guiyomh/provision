@@ -1,0 +1,66 @@
+# - name: Setup ssh key (from github, authorized keys)
+#   include: github-ssh-key.yml
+#   when: PROFILE.githubUser is defined and PROFILE.githubUser != ''
+#   tags:
+#     - bootstrap
+
+- name: Generate ssh key
+  include: ssh-key.yml
+  tags:
+    - bootstrap
+
+- name: Setup ssh config autobuilding
+  include: ssh-conf-autobuild.yml
+  when: PROVISION.clitools
+  tags:
+    - bootstrap
+
+- include: shell/zsh-grml.yml home_dir=/home/{{ ansible_user }}
+  when: PROFILE.zshShell is defined and PROFILE.zshShell == 'grml'
+  tags:
+    - bootstrap
+
+- include: shell/zsh-grml.yml home_dir=/root
+  when: PROFILE.zshShell is defined and PROFILE.zshShell == 'grml'
+  tags:
+    - bootstrap
+
+- include: shell/zsh-prezto.yml home_dir=/home/{{ ansible_user }}
+  when: PROFILE.zshShell is defined and PROFILE.zshShell == 'prezto'
+  tags:
+    - bootstrap
+
+- include: shell/zsh-prezto.yml home_dir=/root
+  when: PROFILE.zshShell is defined and PROFILE.zshShell == 'prezto'
+  tags:
+    - bootstrap
+
+- include: shell/zsh-ohmyzsh.yml home_dir=/home/{{ ansible_user }}
+  when: PROFILE.zshShell is defined and PROFILE.zshShell == 'ohmyzsh'
+  tags:
+    - bootstrap
+
+- include: shell/zsh-ohmyzsh.yml home_dir=/root
+  when: PROFILE.zshShell is defined and PROFILE.zshShell == 'ohmyzsh'
+  tags:
+    - bootstrap
+
+- name: Setup shell
+  include: shell.yml
+  tags:
+    - bootstrap
+
+- name: Setup profile
+  include: profile.yml
+  tags:
+    - bootstrap
+
+# - name: Setup vcs (git)
+#   include: vcs.yml
+#   tags:
+#     - bootstrap
+
+- name: Install and configure rupa/z
+  include: rupa-z.yml
+  tags:
+    - bootstrap

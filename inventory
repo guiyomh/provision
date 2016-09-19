@@ -1,0 +1,2 @@
+localhost    ansible_connection=local 		ansible_user=vagrant
+#myserver     ansible_host=192.168.10.52     ansible_connection=ssh	 ansible_user=mydeployuser

@@ -1,0 +1,4 @@
+- name: Download and update docker images
+  command: "docker pull {{ item }}"
+  with_items: "{{ DOCKER.images }}"
+  ignore_errors: yes

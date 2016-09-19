@@ -1,0 +1,16 @@
+- name: Create data disk
+  include: disk-create.yml
+  when: ansible_devices[SERVER.data.device].partitions[SERVER.data.partition] is not defined
+  tags:
+    - bootstrap
+
+- name: Init disk mounting
+  include: disk-mounting.yml
+  tags:
+    - bootstrap
+
+- name: Disk maintenance
+  include: maintenance.yml
+  tags:
+    - bootstrap
+    - maintenance

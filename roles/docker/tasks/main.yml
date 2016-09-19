@@ -1,0 +1,15 @@
+- include: install.yml
+  tags:
+    - bootstrap
+
+- include: configuration.yml
+  tags:
+    - bootstrap
+
+- include: maintenance.yml
+  tags:
+    - bootstrap
+
+- include: image-loader.yml
+  tags:
+    - bootstrap

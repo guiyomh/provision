@@ -1,0 +1,10 @@
+---
+DEPLOY:
+  username: vagrant
+
+DISK:
+  device: sdb
+  partition: sdb1
+  
+MAIL_ADMIN: guillaume.camus@infogene.fr 
+SMTP_RELAY: relayext.infogene.fr'

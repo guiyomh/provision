@@ -1,0 +1,22 @@
+- name: 'Unmount /dev/{{ SERVER.data.partition }}'
+  mount:
+    name:   /mnt/data
+    src:    '/dev/{{ SERVER.data.partition }}'
+    fstype: '{{ SERVER.data.filesystem }}'
+    state:  unmounted
+
+- name: 'Remove mount /dev/{{ SERVER.data.device }} 1'
+  mount:
+    name:   /mnt/data
+    src:    '/dev/{{ SERVER.data.partition }}'
+    fstype: '{{ SERVER.data.filesystem }}'
+    state:  absent
+
+- name: 'Generate disk label (/dev/{{ SERVER.data.device }})'
+  command: 'parted /dev/{{ SERVER.data.device }} mklabel gpt'
+
+- name: 'Create partition (/dev/{{ SERVER.data.device }})'
+  command: 'parted -- /dev/{{ SERVER.data.device }} mkpart primary 1M -1'
+
+- name: 'Create filesystem (/dev/{{ SERVER.data.device }})'
+  command: 'mkfs --type={{ SERVER.data.filesystem }} /dev/{{ SERVER.data.partition }}'

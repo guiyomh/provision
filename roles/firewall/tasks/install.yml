@@ -1,0 +1,13 @@
+- name: Deploy firewall (template)
+  template:
+    src:   roles/firewall/templates/firewall-vm
+    dest:  /etc/init.d/firewall-vm
+    owner: vagrant
+    group: root
+    mode:  0775
+
+- name: Enable firewall in runlevels
+  command: 'update-rc.d firewall-vm defaults'
+
+- name: Start firewall
+  command: 'service firewall-vm restart'

@@ -1,0 +1,50 @@
+- name: Deploy user files
+  synchronize:
+    rsync_path: "sudo rsync"
+    src: roles/user/files/profile/
+    dest: '/home/{{ ansible_user }}/'
+    delete: no
+
+- name: Deploy user files on root
+  synchronize:
+    rsync_path: "sudo rsync"
+    src: roles/user/files/profile/
+    dest: '/root/'
+    delete: no
+
+- name: Fix rights
+  file:
+    path: '{{ item.path }}'
+    state: '{{ item.state }}'
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: '{{ item.mode }}'
+  with_items:
+   - { path: '/home/{{ ansible_user }}/',                     state : 'directory', mode: '0755' }
+   - { path: '/home/{{ ansible_user }}/.ssh/',                state : 'directory', mode: '0700' }
+   - { path: '/home/{{ ansible_user }}/.ssh/authorized_keys', state : 'file',      mode: '0600' }
+   - { path: '/home/{{ ansible_user }}/.ssh/known_hosts',     state : 'file',      mode: '0644' }
+   - { path: '/home/{{ ansible_user }}/.subversion/',         state : 'directory', mode: '0700' }
+   - { path: '/home/{{ ansible_user }}/.subversion/config',   state : 'file',      mode: '0600' }
+   - { path: '/home/{{ ansible_user }}/.my.cnf',              state : 'file',      mode: '0600' }
+   - { path: '/home/{{ ansible_user }}/.gitconfig',           state : 'file',      mode: '0644' }
+  ignore_errors: yes
+
+
+- name: Fix rights
+  file:
+    path: '{{ item.path }}'
+    state: '{{ item.state }}'
+    owner: 'root'
+    group: 'root'
+    mode: '{{ item.mode }}'
+  with_items:
+   - { path: '/root/',                     state : 'directory', mode: '0755' }
+   - { path: '/root/.ssh/',                state : 'directory', mode: '0700' }
+   - { path: '/root/.ssh/authorized_keys', state : 'file',      mode: '0600' }
+   - { path: '/root/.ssh/known_hosts',     state : 'file',      mode: '0644' }
+   - { path: '/root/.subversion/',         state : 'directory', mode: '0700' }
+   - { path: '/root/.subversion/config',   state : 'file',      mode: '0600' }
+   - { path: '/root/.my.cnf',              state : 'file',      mode: '0600' }
+   - { path: '/root/.gitconfig',           state : 'file',      mode: '0644' }
+  ignore_errors: yes

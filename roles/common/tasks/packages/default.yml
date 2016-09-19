@@ -1,0 +1,119 @@
+- name: Install default provisioning packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - parted
+    - curl
+    - wget
+  when: ansible_os_family == 'Debian'
+
+- name: Install default provisioning packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - parted
+    - curl
+    - wget
+  when: ansible_os_family == 'RedHat'
+
+- name: Install default tool packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - zsh
+    - moreutils
+    - byobu
+    - multitail
+    - dnsutils
+    - telnet
+    - vim
+    - tmux
+    - tree
+  when: ansible_os_family == 'Debian'
+
+- name: Install default tool packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - zsh
+    - moreutils
+    - byobu
+    - multitail
+    - bind-utils
+    - telnet
+    - vim
+    - tmux
+    - tree
+  when: ansible_os_family == 'RedHat'
+
+- name: Install default compression packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - zip
+    - unzip
+    - bzip2
+    - p7zip-full
+  when: ansible_os_family == 'Debian'
+
+- name: Install default compression packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - zip
+    - unzip
+    - bzip2
+    - p7zip
+  when: ansible_os_family == 'RedHat'
+
+- name: Install default filesystem packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - e2fsprogs
+    - xfsprogs
+    - btrfs-tools
+  when: ansible_os_family == 'Debian'
+
+
+- name: Install default filesystem packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - e2fsprogs
+    - xfsprogs
+    - btrfs-progs
+  when: ansible_os_family == 'RedHat'
+
+- name: Install default other packages [Debian]
+  apt:
+    pkg:   '{{ item }}'
+    state: present
+  with_items:
+    - incron
+    - python-pip
+  when: ansible_os_family == 'Debian'
+
+- name: Install default other packages [RedHat]
+  yum:
+    name:   '{{ item }}'
+    state: present
+  with_items:
+    - incron
+    - python-pip
+  when: ansible_os_family == 'RedHat'
+
+- name: Start service incron
+  service: name=incrond state=started enabled=yes
+
+# - name: Update Rsync ['RedHat']
+#   yum: name=http://pkgs.repoforge.org/rsync/rsync-3.1.1-1.el7.rfx.x86_64.rpm state=present
+#   when: ansible_os_family == 'RedHat'

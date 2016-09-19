@@ -1,0 +1,44 @@
+;++++++++++++++++++++++++++++++++++++++
+; CliTools configuration
+;++++++++++++++++++++++++++++++++++++++
+; Defaults:
+;  https://github.com/mblaschke/clitools/blob/develop/src/config.ini
+;
+;++++++++++++++++++++++++++++++++++++++
+
+[config]
+ssh_conf_path   = "/vagrant/provision/sshconfig/"
+domain_dev      = ".vm"
+
+[syscheck]
+enabled = 1
+wall = 1
+growl = 0
+diskusage = 90
+
+[docker]
+interface   = docker0
+boilerplate = "{{ CLITOOLS.docker.boilerplate }}"
+
+climethod = docker-exec
+; climethod = dockercompose-run
+
+[dockerBoilerplate]
+default = "{{ CLITOOLS.docker.boilerplate }}"
+typo3   = https://github.com/webdevops/TYPO3-docker-boilerplate.git
+
+[banner]
+mailbox = imap-insecure://{{ansible_user}}@{{ ansible_default_ipv4.address }}/INBOX
+
+[commands]
+; not used commands here
+ignore[] = "CliTools\Console\Command\Log\ApacheCommand"
+ignore[] = "CliTools\Console\Command\Log\PhpCommand"
+ignore[] = "CliTools\Console\Command\Log\DebugCommand"
+ignore[] = "CliTools\Console\Command\Apache\RestartCommand"
+ignore[] = "CliTools\Console\Command\Mysql\RestartCommand"
+ignore[] = "CliTools\Console\Command\Php\RestartCommand"
+ignore[] = "CliTools\Console\Command\Samba\RestartCommand"
+ignore[] = "CliTools\Console\Command\System\UpdateCommand"
+ignore[] = "CliTools\Console\Command\System\RebootCommand"
+ignore[] = "CliTools\Console\Command\Vagrant\*Command"
