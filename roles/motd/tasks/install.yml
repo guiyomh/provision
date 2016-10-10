@@ -1,0 +1,43 @@
+---
+
+- name: Install dependencies [Redhat]
+  yum: name={{ item }} state=present
+  with_items:
+    - figlet
+    - openssh-clients
+    - bc
+    - sysstat
+  when: ansible_os_family == 'RedHat'
+
+- name: Install dependencies [Debian]
+  apt: pkg={{ item }} state=present
+  with_items:
+    - figlet
+    - openssh-clients
+    - bc
+    - sysstat
+  when: ansible_os_family == 'Debian'
+
+- name: Disable Motd
+  lineinfile:
+    destfile: /etc/ssh/sshd_config
+    regexp:   '^#?PrintMotd'
+    line:     'PrintMotd yes'
+    state:     present
+  notify:
+    - Restart ssh
+
+- name: Download Motd Generator
+  copy: src=FireMotD.sh dest=/usr/bin/FireMotD.sh mode=0755 owner=root group=root
+
+- name: Create updatecount.txt
+  file: path=/tmp/updatecount.txt state=touch mode=0777
+
+- name: Copy script update_motd.sh
+  copy: src=update_motd.sh dest=/usr/bin/update_motd.sh mode=0755 owner=root group=root
+
+- name: Setup Cron at reboot
+  cron: name="Update Motd at reboot" special_time=reboot job="/usr/bin/update_motd.sh > /etc/motd"
+
+- name: Setup Cron at X times
+  cron: name="Update Motd" minute="*/5" job="/usr/bin/update_motd.sh > /etc/motd"

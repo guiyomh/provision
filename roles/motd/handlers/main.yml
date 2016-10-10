@@ -1,0 +1,7 @@
+- name: Restart ssh
+  command: service ssh restart
+  when: ansible_os_family == 'Debian'
+
+- name: Restart ssh
+  command: service sshd restart
+  when: ansible_os_family == 'RedHat'

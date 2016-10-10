@@ -16,4 +16,5 @@
    - { role: php ,       when: PROVISION.clitools == 1 }
    - { role: clitools ,  when: PROVISION.clitools == 1 }
    - { role: monit          }
+   - { role: motd           }
    - { role: user           }

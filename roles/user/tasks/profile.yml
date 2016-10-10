@@ -4,6 +4,8 @@
     src: roles/user/files/profile/
     dest: '/home/{{ ansible_user }}/'
     delete: no
+    owner: 'no'
+    group: 'no'
 
 - name: Deploy user files on root
   synchronize:
@@ -11,6 +13,8 @@
     src: roles/user/files/profile/
     dest: '/root/'
     delete: no
+    owner: 'no'
+    group: 'no'
 
 - name: Fix rights
   file:

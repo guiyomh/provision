@@ -7,4 +7,8 @@ DISK:
   partition: sdb1
   
 MAIL_ADMIN: guillaume.camus@infogene.fr 
-SMTP_RELAY: relayext.infogene.fr'
+SMTP_RELAY: localhost
+
+LOGWATCH_MAIL:
+  - email1@society.com
+  - email2@society.com

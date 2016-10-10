@@ -1,0 +1,6 @@
+---
+
+- name: Configure Motd
+  include: install.yml
+  tags:
+    - bootstrap

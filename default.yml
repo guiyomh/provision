@@ -74,7 +74,7 @@ CLITOOLS:
 # LOGWATCH setting
 ###################
 LOGWATCH:
-  email: "{{ MAIL_ADMIN  | default('technical@infogene.fr') }}" # Email Address which Logwatch reports to
+  email: "{{ LOGWATCH_MAIL | join(' ') | default('technical@infogene.fr') }}" # Email Address which Logwatch reports to
   detail: High                  # The level of detail in the Logwatch report (Low,Medium, High)
   range: yesterday              # The default time range for the Logwatch report (all,today, yesterday)
   output: mail                  # The output method of the Logwatch report (mail, stdout)
