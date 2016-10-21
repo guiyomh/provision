@@ -58,3 +58,10 @@
     - install
   when:  git_installed_version|failed or git_reinstall_from_source
   become: yes
+
+- name: Remove git source
+  command: >
+    rm -rf {{ GIT.workspace }}/git-{{ GIT.version }}.tar.gz
+    rm -rf {{ GIT.workspace }}/git-{{ GIT.version }}
+  when:  git_installed_version|failed or git_reinstall_from_source
+  ignore_errors: yes

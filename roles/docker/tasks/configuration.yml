@@ -103,3 +103,18 @@
     src: roles/docker/files/profile.d/
     dest: /etc/profile.d/
     delete: no
+
+- name: Configure docker clean dangling images cronjob
+  cron:
+    name: docker clean dangling images
+    job: /usr/bin/docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+    minute: 00
+    hour: 3
+
+- name: Configure docker clean exited container cronjob
+  cron:
+    name: docker clean exited container
+    job: /usr/bin/docker rm $(docker ps -a -q -f status=exited)
+    minute: 30
+    hour: 2
+    day: '*/5'
